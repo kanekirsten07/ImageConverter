@@ -14,6 +14,8 @@ public class ImageConverterMain {
 	private static JFrame frame;
 	private static ArrayList<ArrayList<Integer>> mylist = new ArrayList<ArrayList<Integer>>();
 	private static ArrayList<Integer> innerlist;
+	private static int [][] newlist;
+	private static int [][] newlist2;
 	private static houghTransform h = new houghTransform();
 	public static void main(String[] args)
 	{
@@ -25,7 +27,7 @@ public class ImageConverterMain {
 		File selFile = fc.getSelectedFile();
 		
 		convertToArray(selFile);
-		h.runHoughTransform(mylist);
+		h.runHoughTransform(newlist);
 	}
 	
 	public static void convertToArray(File myimg)
@@ -37,25 +39,33 @@ public class ImageConverterMain {
 			int h = bi.getHeight();
 			//int [] newImage = bi.getRGB(0, 0, w, h, null, 0, w);
 			PrintWriter out = new PrintWriter(new FileWriter("output.txt"));
-			int value[][] = new int[w][h];
-			for(int i=0; i<w; i++)
+			int value[][] = new int[h][w];
+			//newlist = new int[h][w];
+			//newlist = new int[h][w];
+			//System.out.println(w);
+			//System.out.println(h);
+			for(int i=0; i<h; i++)
 			{
-				for(int k = 0; k<h; k++)
+				for(int k = 0; k<w; k++)
 				{
 					innerlist = new ArrayList<Integer>();
-					value[i][k] = bi.getRGB(i,k);
-					out.print(value[i][k]);
+					value[i][k] = bi.getRGB(k,i);
+					//System.out.print(value[i][k]);
 					innerlist.add(value[i][k]);
 				}
 				mylist.add(innerlist);
-				out.println("");
+				System.out.println("");
 				
 			}
+			newlist = value;
 			out.close();
+			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
+	
+
 
 }
