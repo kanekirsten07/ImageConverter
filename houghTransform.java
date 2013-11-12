@@ -8,7 +8,7 @@ public class houghTransform {
 	int horedges = 0;
 	int diagrightEdges = 0;
 	int diagleftEdges = 0;
-	Point previouspoint = new Point(-1, -1, 0);
+	
 	private int width;
 	private int height;
 	
@@ -38,108 +38,117 @@ public class houghTransform {
 		for(int r = 1; r <height && r >= 0; r++)
 		{
 			LineSegment templines = new LineSegment();
+			Point previouspoint = new Point(-1, -1, 0);
+			
 			for(int c = 0, newrow=r; newrow >= 0 && c < width; c++, newrow--)
 			{
-				Point p2 = new Point(r, c, a[newrow][c]);
-				
-				if((a[newrow][c]) == previouspoint.getColor())
-				{
-					if(templines.getSize()== 0)
-					{
-						templines.addPoint(previouspoint);
-						templines.addPoint(p2);
-						edgeDetection(3, a, p2);
-					}
-				}
-				previouspoint = p2;
-				if(templines.getSize() != 0)
-				{
-				 rightdiagonal.add(templines);
-				}
-			}
-		}
-		// 2.
-		// Right to left, going up to the right each iteration of c
-		for(int r = height-1; r >=0 ; r--)
-		{
-			int columnstart = width -2;
-			LineSegment templines = new LineSegment();
-			for(int c = columnstart, newrow= r; newrow >= 0 && c < width ; c++, newrow--)
-			{
-				Point p2 = new Point(r, c, a[r][c]);
-				
+				Point p2 = new Point(newrow, c, a[newrow][c]);
+				//System.out.print(newrow);
+				//System.out.println(c);
 				if((a[r][c]) == previouspoint.getColor())
 				{
 					if(templines.getSize()== 0)
 					{
 						templines.addPoint(previouspoint);
 						templines.addPoint(p2);
-						edgeDetection(3, a, p2);
+						edgeDetection(2, a, p2);
+					}
+					else
+					{
+						templines.addPoint(p2);
+						edgeDetection(2, a, p2);
 					}
 				}
 				previouspoint = p2;
+				
+			}
+			if(templines.getSize() != 0)
+			{
+			 leftdiagonal.add(templines);
+			}
+			
+			if(r == height-1)
+			{
+				for(int columnstart = 1; columnstart < width; columnstart++)
+				{
+				for(int c = columnstart, newrow=r; newrow >= 0 && c < width; c++, newrow--)
+				{
+					Point p2 = new Point(newrow, c, a[newrow][c]);
+					//System.out.print(newrow);
+					//System.out.println(c);
+					if((a[r][c]) == previouspoint.getColor())
+					{
+						if(templines.getSize()== 0)
+						{
+							templines.addPoint(previouspoint);
+							templines.addPoint(p2);
+							edgeDetection(2, a, p2);
+						}
+						else
+						{
+							templines.addPoint(p2);
+							edgeDetection(2, a, p2);
+						}
+					}
+					previouspoint = p2;
+					
+				}
+				}
 				if(templines.getSize() != 0)
 				{
-				 rightdiagonal.add(templines);
+				 leftdiagonal.add(templines);
 				}
 			}
-			columnstart --;
+		
 		}
+		
+		
+		
 		// 3.
 		// Left to right going up to the left each iteration of c
 		for(int r = height-1; r >=0 ; r--)
 		{
-			int columnstart = 1;
+			int newcolumnstart;
+			System.out.println(r);
 			LineSegment templines = new LineSegment();
+			Point previouspoint = new Point(-1, -1, 0);
+			if(r==height-2)
+			{
+				 newcolumnstart = width-1;
+			}
+			else
+			{
+				newcolumnstart = 1;
+			}
+			for(int columnstart = newcolumnstart; columnstart < width; columnstart++)
+			{
 			for(int c = columnstart, newrow= r; newrow >= 0 && c >= 0 ; c--, newrow--)
 			{
-				Point p2 = new Point(r, c, a[r][c]);
-				
+				Point p2 = new Point(newrow, c, a[newrow][c]);
+				System.out.print(newrow);
+				System.out.println(c);
 				if((a[r][c]) == previouspoint.getColor())
 				{
 					if(templines.getSize()== 0)
 					{
 						templines.addPoint(previouspoint);
 						templines.addPoint(p2);
-						edgeDetection(2, a, p2);
+						edgeDetection(3, a, p2);
+					}else
+					{
+						templines.addPoint(p2);
+						edgeDetection(3, a, p2);
 					}
 				}
 				previouspoint = p2;
-				if(templines.getSize() != 0)
-				{
-				 leftdiagonal.add(templines);
-				}
 			}
-			columnstart++;
-		}
-		// 4.
-		// Right to left going up to the left each iteration of c
-		for(int r =1; r < height ; r++)
-		{
-			int columnstart = r;
-			LineSegment templines = new LineSegment();
-			for(int c = columnstart, newrow= r; newrow >= 0 && c >=0 ; c--, newrow--)
+			}
+			if(templines.getSize() != 0)
 			{
-				Point p2 = new Point(r, c, a[r][c]);
-				
-				if((a[r][c]) == previouspoint.getColor())
-				{
-					if(templines.getSize()== 0)
-					{
-						templines.addPoint(previouspoint);
-						templines.addPoint(p2);
-						edgeDetection(2, a, p2);
-					}
-				}
-				previouspoint = p2;
-				if(templines.getSize() != 0)
-				{
-				 leftdiagonal.add(templines);
-				}
+			 rightdiagonal.add(templines);
 			}
-		}
-		
 			
+		}
 		
 	}
 	
@@ -149,6 +158,7 @@ public class houghTransform {
 		for(int j = 0; j< width; j++)
 		{
 			LineSegment templines = new LineSegment();
+			Point previouspoint = new Point(-1, -1, 0);
 		for(int i = 0; i < height; i++)
 		{
 			Point p2 = new Point(i, j, a[i][j]);
@@ -159,14 +169,19 @@ public class houghTransform {
 				{
 					templines.addPoint(previouspoint);
 					templines.addPoint(p2);
-					edgeDetection(1, a, p2);
+					edgeDetection(0, a, p2);
+				}else
+				{
+					templines.addPoint(p2);
+					edgeDetection(0, a, p2);
 				}
 			}
 			previouspoint = p2;
-			if(templines.getSize() != 0)
-			{
-			 this.vertical.add(templines);
-			}
+			
+		}
+		if(templines.getSize() != 0)
+		{
+		 this.vertical.add(templines);
 		}
 		}
 		
@@ -177,6 +192,7 @@ public class houghTransform {
 		for(int j = 0; j< height; j++)
 		{
 			LineSegment templines = new LineSegment();
+			Point previouspoint = new Point(-1, -1, 0);
 		for(int i = 0; i < width; i++)
 		{
 			Point p2 = new Point(j, i, a[j][i]);
@@ -186,14 +202,21 @@ public class houghTransform {
 				if(templines.getSize()== 0)
 				{
 					templines.addPoint(previouspoint);
+					templines.addPoint(p2);
 					edgeDetection(1, a, p2);
+				}
+				else
+				{
+				templines.addPoint(p2);
+				edgeDetection(1, a, p2);
 				}
 			}
 			previouspoint = p2;
-			if(templines.getSize() != 0)
-			{
-			 this.horizontal.add(templines);
-			}
+			
+		}
+		if(templines.getSize() != 0)
+		{
+		 this.horizontal.add(templines);
 		}
 		}
 		

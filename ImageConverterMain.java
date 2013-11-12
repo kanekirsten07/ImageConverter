@@ -54,7 +54,7 @@ public class ImageConverterMain {
 					innerlist.add(value[i][k]);
 				}
 				mylist.add(innerlist);
-				System.out.println("");
+				//System.out.println("");
 				
 			}
 			newlist = value;

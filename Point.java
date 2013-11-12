@@ -4,7 +4,8 @@ public class Point {
 	
 	private int x;
 	private int y;
-	private int color;
+	//Default to zero to prevent errors
+	private int color = 0;
 	
 	public Point(int newx, int newy, int newcolor)
 	{
